@@ -1,44 +1,40 @@
 import { ChevronRightIcon, TrashIcon } from "lucide-react";
-import { useNavigate } from "react-router-dom";
-import Button from "./Button";
 
-function Tasks({ tasks, onTaskClick, onDeleteTaskClick }) {
-  const navigate = useNavigate();
-
-  function onSeeDatailsClick(task) {
-    const queryParams = new URLSearchParams();
-    queryParams.set("title", task.title);
-    queryParams.set("description", task.description);
-    navigate(`/task/?${queryParams.toString()}`);
-  }
-
+function Tasks({ tasks, onTaskClick, onSeeDetailsClick, onDeleteTaskClick }) {
   return (
-    <ul className="space-y-4 p-6 bg-slate-200 rounded-md shadow">
-      {tasks.map((task) => (
-        <li key={task.id} className="flex gap-2">
-          <button
-            onClick={() => onTaskClick(task.id)}
-            // Ajustado para evitar renderizar a palavra "false" na classe
-            className={`bg-slate-400 text-left w-full text-white p-2 rounded-md ${
-              task.isCompleted ? "line-through" : ""
-            }`}
-          >
-            {task.title}
-          </button>
+    <ul className="space-y-4">
+      {tasks.length === 0 ? (
+        <p className="text-zinc-400 italic text-center mt-4">
+          Nenhuma tarefa criada.
+        </p>
+      ) : (
+        tasks.map((task) => (
+          <li key={task.id} className="flex gap-2 items-center">
+            <button
+              onClick={() => onTaskClick(task.id)}
+              className={`bg-white text-left w-full text-black font-medium p-3 rounded-lg shadow-sm hover:bg-gray-100 transition-all ${
+                task.isCompleted ? "line-through text-zinc-400 bg-zinc-200" : ""
+              }`}
+            >
+              {task.title}
+            </button>
 
-          <Button
-            onClick={() => onSeeDatailsClick(task)}
-          >
-            <ChevronRightIcon />
-          </Button>
+            <button
+              onClick={() => onSeeDetailsClick(task)}
+              className="bg-white text-zinc-700 hover:bg-gray-100 p-3 rounded-lg shadow-sm flex items-center justify-center transition-all min-w-[44px] min-h-[44px]"
+            >
+              <ChevronRightIcon size={20} />
+            </button>
 
-          <Button
-            onClick={() => onDeleteTaskClick(task.id)}
-          >
-            <TrashIcon />
-          </Button>
-        </li>
-      ))}
+            <button
+              onClick={() => onDeleteTaskClick(task.id)}
+              className="bg-white text-zinc-700 hover:bg-red-50 hover:text-red-500 p-3 rounded-lg shadow-sm flex items-center justify-center transition-all min-w-[44px] min-h-[44px]"
+            >
+              <TrashIcon size={20} />
+            </button>
+          </li>
+        ))
+      )}
     </ul>
   );
 }
